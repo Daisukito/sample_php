@@ -1,12 +1,22 @@
 language: php
 
-php: 
+php:
   - 5.3
   - 5.4
   - 5.5
   - 5.6
-  
-before_script: 
+
+env:
+  global:
+    - OPENSHIFT_REPO=ssh://554d17735973ca5b6a00009e@php-daisukitoo.rhcloud.com/~/git/php.git/
+
+before_install:
+  - git remote -v | grep ^openshift || git remote add openshift $OPENSHIFT_REPO
+
+  after_success:
+  - git push -f openshift $BRANCH:master
+
+before_script:
   - mkdir -p shippable/codecoverage
   - mkdir -p shippable/testresults
 
@@ -15,5 +25,3 @@ script:
 
 notifications:
    email: false
-
-      
